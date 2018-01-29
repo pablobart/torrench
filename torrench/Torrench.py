@@ -41,6 +41,7 @@ class Torrench(Config):
         -i, --idope           Search Idope
         -b, --xbit            Search XBit.pw
         -g, --libgen          Search LibGen (Ebooks)
+        -npct, --newpct       Search NewPCT
 
     Additional options:
         -c, --clear-html      Clear all [TPB] torrent description HTML files and exit.
@@ -115,6 +116,10 @@ class Torrench(Config):
                             "--libgen",
                             action="store_true",
                             help="Search LibGen (Ebooks)")
+        optional_sites.add_argument("-npct",
+                            "--newpct",
+                            action="store_true",
+                            help="Search NewPCT")
         misc.add_argument("-c",
                             "--clear-html",
                             action="store_true",
@@ -223,7 +228,8 @@ class Torrench(Config):
             self.args.idope,
             self.args.xbit,
             self.args.libgen,
-            self.args.limetorrents
+            self.args.limetorrents,
+            self.args.newpct
         )  # These modules are only enabled through manual configuration.
         if self.args.clear_html:
             if not self.args.thepiratebay:
@@ -295,6 +301,11 @@ class Torrench(Config):
                     self.logger.debug("Input ISBN: [%s]" % (self.input_title))
                     import torrench.modules.libgen as libg
                     libg.main(self.input_title)
+                elif self.args.newpct:
+                    self.logger.debug("Using NewPCT")
+                    self.logger.debug("Input title: [%s] ; page_limit: [%s]" % (self.input_title, self.page_limit))
+                    import torrench.modules.newpct as newpct
+                    newpct.main(self.input_title, self.page_limit)
         elif self.args.distrowatch:
             self.logger.debug("Using distrowatch")
             self.logger.debug("Input title: [%s]" % (self.input_title))
